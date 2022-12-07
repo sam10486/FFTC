@@ -1,0 +1,35 @@
+#################################################################################################
+testROM:testROM0 testROM1 testROM0_syn testROM1_syn
+	mv $(ROMDATA_PATH)/*.v  $(ROMDATA_PATH)/testROM
+	mv $(ROMDATA_PATH)/*.rcf  $(ROMDATA_PATH)/testROM
+	mv $(ROMDATA_PATH)/*.lib  $(ROMDATA_PATH)/testROM
+#libaray compiler 
+#lc_schell
+test_lib:
+	cp $(FFTC_PATH)/test_script.tcl  $(ROMDATA_PATH)/testROM
+	cd $(ROMDATA_PATH)/testROM ; \
+	lc_shell -f $(ROMDATA_PATH)/testROM/test_script.tcl
+	mkdir -p db_folder
+	mv $(ROMDATA_PATH)/testROM/*.db  $(FFTC_PATH)/db_folder
+
+testROM0:
+	cd $(ROMDATA_PATH) ; \
+	$(rodsd_path) verilog -spec $(ROM_spec) -instname testROM0 \
+	-code_file  testROM0.txt -mux 16 -words 4096 \
+	-bits 64 -frequency $(Freq)
+testROM1:
+	cd $(ROMDATA_PATH) ; \
+	$(rodsd_path) verilog -spec $(ROM_spec) -instname testROM1 \
+	-code_file  testROM1.txt -mux 8 -words 4096 \
+	-bits 128 -frequency $(Freq)
+
+testROM0_syn:
+	cd $(ROMDATA_PATH) ; \
+	$(rodsd_path) synopsys -spec $(ROM_spec) -instname testROM0 \
+	-code_file  testROM0.txt -libname testROM0 -mux 16 -words 4096 \
+	-bits 64 -frequency $(Freq)
+testROM1_syn:
+	cd $(ROMDATA_PATH) ; \
+	$(rodsd_path) synopsys -spec $(ROM_spec) -instname testROM1 \
+	-code_file  testROM1.txt -libname testROM1 -mux 8 -words 4096 \
+	-bits 128 -frequency $(Freq)

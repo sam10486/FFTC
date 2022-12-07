@@ -1,0 +1,1 @@
+s1(21Nov2022:21:35:19):  irun test_FFTP.v +access+r -timescale 1ns/1ps +ncnontcglitch -loadpli1 debpli:novas_pli_boot 

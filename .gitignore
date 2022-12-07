@@ -2,6 +2,8 @@
 *.log
 *.history
 *.o
+*.rc
+*.conf
 
 /syn
 /BFFTP/*/*.fsdb

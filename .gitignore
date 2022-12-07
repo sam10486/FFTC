@@ -1,7 +1,10 @@
 
 *.log
+*.history
+*.o
 
 /syn
 /BFFTP/*/*.fsdb
 /BFFTP/*/siang_test_v/INCA_libs/
 /BFFTP/*/*.log
+/BFFTP/*/INCA_libs

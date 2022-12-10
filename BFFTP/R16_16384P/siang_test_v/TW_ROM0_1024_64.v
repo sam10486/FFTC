@@ -8,7 +8,8 @@
    state,
 
    Q,
-   Q_const
+   Q_const,
+   Q_group_tf_fly
  );
    parameter                  SC_WIDTH    = 3;
    parameter                  P_WIDTH     = 64 ; 	
@@ -26,6 +27,7 @@
    input [S_WIDTH-1:0] state;
    output reg [P_WIDTH-1:0] Q     ;
    output reg [P_WIDTH-1:0] Q_const     ;
+   output reg [P_WIDTH-1:0] Q_group_tf_fly;
      
    reg [P_WIDTH-1:0] buf_data_stage0 [0:group_stage0-1][0:init_store_data-1];  
    reg [P_WIDTH-1:0] buf_data_stage1 [0:group_stage1-1][0:init_store_data-1];  
@@ -478,6 +480,25 @@
                3'd1: Q_const <= buf_const[1];
                default: Q_const <= Q_const;
             endcase
+         end
+      end
+   end
+
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         Q_group_tf_fly <= 64'd0;
+      end else begin
+         if (~CEN) begin
+            if (stage_counter == 3'd0) begin
+               if (cnt_0 >= 0 && cnt_0 <= 3) begin
+                  Q_group_tf_fly <= buf_data_stage0[group_th][cnt_0];
+               end else begin
+                  Q_group_tf_fly <= 64'd0;
+               end
+            end else begin
+               Q_group_tf_fly <= 64'd0;
+            end
          end
       end
    end

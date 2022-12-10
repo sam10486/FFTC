@@ -831,7 +831,7 @@
     wire [SD_WIDTH-1:0]  siang_ROMD5_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD6_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD7_out_wire ;
-    // RON const output
+    // ROM const output
     wire [P_WIDTH-1:0]   siang_ROMD0_const_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD1_const_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD2_const_out_wire ;                                      
@@ -840,6 +840,15 @@
     wire [SD_WIDTH-1:0]  siang_ROMD5_const_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD6_const_out_wire ;                                      
     wire [SD_WIDTH-1:0]  siang_ROMD7_const_out_wire ;
+    // ROM Q_group_tf_fly
+    wire [P_WIDTH-1:0]  horizontal_tf0_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf1_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf2_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf3_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf4_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf5_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf6_wire    ;
+    wire [SD_WIDTH-1:0] horizontal_tf7_wire    ;
 
 
     //  Mux3 output
@@ -909,7 +918,8 @@
         .state(state),
         //output
         .Q(siang_ROMD0_out_wire),
-        .Q_const(siang_ROMD0_const_out_wire)
+        .Q_const(siang_ROMD0_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf0_wire)
     );
 
     TW_ROM1_1024_64 u_TW_ROM1_1024_64 (
@@ -921,7 +931,8 @@
         .state(state),
         //output
         .Q(siang_ROMD1_out_wire),
-        .Q_const(siang_ROMD1_const_out_wire)
+        .Q_const(siang_ROMD1_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf1_wire)
     );
 
     TW_ROM2_1024_64 u_TW_ROM2_1024_64 (
@@ -933,7 +944,8 @@
         .state(state),
         //output
         .Q(siang_ROMD2_out_wire),
-        .Q_const(siang_ROMD2_const_out_wire)
+        .Q_const(siang_ROMD2_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf2_wire)
     );
 
     TW_ROM3_1024_64 u_TW_ROM3_1024_64 (
@@ -945,7 +957,8 @@
         .state(state),
         //output
         .Q(siang_ROMD3_out_wire),
-        .Q_const(siang_ROMD3_const_out_wire)
+        .Q_const(siang_ROMD3_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf3_wire)
     );
 
     TW_ROM4_1024_64 u_TW_ROM4_1024_64 (
@@ -957,7 +970,8 @@
         .state(state),
         //output
         .Q(siang_ROMD4_out_wire),
-        .Q_const(siang_ROMD4_const_out_wire)
+        .Q_const(siang_ROMD4_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf4_wire)
     );
 
     TW_ROM5_1024_64 u_TW_ROM5_1024_64 (
@@ -969,7 +983,8 @@
         .state(state),
         //output
         .Q(siang_ROMD5_out_wire),
-        .Q_const(siang_ROMD5_const_out_wire)
+        .Q_const(siang_ROMD5_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf5_wire)
     );
 
     TW_ROM6_1024_64 u_TW_ROM6_1024_64 (
@@ -981,7 +996,8 @@
         .state(state),
         //output
         .Q(siang_ROMD6_out_wire),
-        .Q_const(siang_ROMD6_const_out_wire)
+        .Q_const(siang_ROMD6_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf6_wire)
     );
 
     TW_ROM7_1024_64 u_TW_ROM7_1024_64 (
@@ -993,7 +1009,8 @@
         .state(state),
         //output
         .Q(siang_ROMD7_out_wire),
-        .Q_const(siang_ROMD7_const_out_wire)
+        .Q_const(siang_ROMD7_const_out_wire),
+        .Q_group_tf_fly(horizontal_tf7_wire)
     );
 
     stage_delay siang_stage_delay(
@@ -1466,5 +1483,54 @@
                              .clk(clk)                                      
                              ) ;
     
-    //-------------------------------------------------------								                                          
+    //-------------------------------------------------------	
+
+
+
+    //------------group tf fly---------------------------
+    /*
+    wire [P_WIDTH-1:0] siang_group_tf_fly_wire;
+    wire [P_WIDTH-1:0] siang_group_tf_fly_out;
+
+    horizontal_tf_fly horizontal_tf_fly0(
+        .Q             (siang_group_tf_fly_wire),
+        
+        .rst_n         (rst_n),  
+        .clk           (clk),  
+        .state         (state),  
+        .stage_counter (data_cnt_wire[DC_WIDTH-1:DCNT_BP4]) ,
+        .CEN           (RomCen_wire)
+    );
+
+    MulMod128 mul_group_tf_fly0(
+        .S_out(siang_group_tf_fly_out),        
+        .A_in(siang_Q_group_tf_fly0),              
+        .B_in(siang_group_tf_fly_wire),     
+        .N_in(N_D4_wire),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+    */
+    wire [P_WIDTH-1:0] horizontal_tf_out;
+
+    horizontal_top horizontal_top(
+        .S_out  (horizontal_tf_out),
+
+        .horizontal_ROM0_in    (horizontal_tf0_wire),
+        .horizontal_ROM1_in    (horizontal_tf1_wire),
+        .horizontal_ROM2_in    (horizontal_tf2_wire),
+        .horizontal_ROM3_in    (horizontal_tf3_wire),
+        .horizontal_ROM4_in    (horizontal_tf4_wire),
+        .horizontal_ROM5_in    (horizontal_tf5_wire),
+        .horizontal_ROM6_in    (horizontal_tf6_wire),
+        .horizontal_ROM7_in    (horizontal_tf7_wire),
+        .rst_n          (rst_n),
+        .clk            (clk),
+        .state          (state),
+        .stage_counter  (data_cnt_wire[DC_WIDTH-1:DCNT_BP4]),
+        .CEN            (RomCen_wire),
+        .N_in           (N_D4_wire)
+
+    );
+    //---------------------------------------------------							                                          
  endmodule                                                                  

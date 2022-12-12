@@ -60,6 +60,8 @@
 	`include "./siang_test_v/horizontal_tf_fly.v"
 	`include "./siang_test_v/horizontal_top.v"
 	`include "./siang_test_v/horizontal_Mux3.v"
+	`include "./siang_test_v/horizontal_fifo.v"
+	`include "./siang_test_v/DifRom_tf_const.v"
   //-------------------------------------
                                                                                                                               
  `timescale 1 ns/1 ps                                                                                                         
@@ -320,6 +322,7 @@
  	initial begin                                                                                                               
  		$fsdbDumpfile("FFTP.fsdb"); 
  		$fsdbDumpvars ;  
+		$fsdbDumpvars("+struct", "+mda", u_FFTP);
 		//#2620 $fsdbDumpon;
 		//#24300 $fsdbDumpoff;                                                                                                    
         //$dumpfile("FFTP.vcd");

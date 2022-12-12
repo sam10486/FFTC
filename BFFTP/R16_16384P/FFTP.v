@@ -1488,29 +1488,6 @@
 
 
     //------------group tf fly---------------------------
-    /*
-    wire [P_WIDTH-1:0] siang_group_tf_fly_wire;
-    wire [P_WIDTH-1:0] siang_group_tf_fly_out;
-
-    horizontal_tf_fly horizontal_tf_fly0(
-        .Q             (siang_group_tf_fly_wire),
-        
-        .rst_n         (rst_n),  
-        .clk           (clk),  
-        .state         (state),  
-        .stage_counter (data_cnt_wire[DC_WIDTH-1:DCNT_BP4]) ,
-        .CEN           (RomCen_wire)
-    );
-
-    MulMod128 mul_group_tf_fly0(
-        .S_out(siang_group_tf_fly_out),        
-        .A_in(siang_Q_group_tf_fly0),              
-        .B_in(siang_group_tf_fly_wire),     
-        .N_in(N_D4_wire),                 
-        .rst_n(rst_n),                    
-        .clk(clk)                        
-    );
-    */
     wire [P_WIDTH-1:0] horizontal_tf_out;
 
     horizontal_top horizontal_top(

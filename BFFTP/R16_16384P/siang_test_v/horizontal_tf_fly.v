@@ -116,7 +116,7 @@ always @(posedge clk or posedge rst_n) begin
     if (!rst_n) begin
         horizontal_factor_idx <= 6'd1;
     end else begin
-        if (cnt == 4'd3 || cnt == 4'd7 || cnt == 4'd11 || cnt == 4'd15) begin
+        if (cnt == 4'd15) begin
             horizontal_factor_idx <= horizontal_factor_idx + 6'd1;
         end else begin
             horizontal_factor_idx <= horizontal_factor_idx;

@@ -62,6 +62,7 @@
 	`include "./siang_test_v/horizontal_Mux3.v"
 	`include "./siang_test_v/horizontal_fifo.v"
 	`include "./siang_test_v/DifRom_tf_const.v"
+	`include "./siang_test_v/horizontal_out_process.v"
   //-------------------------------------
                                                                                                                               
  `timescale 1 ns/1 ps                                                                                                         

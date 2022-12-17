@@ -6,7 +6,7 @@
    CLK,
    CEN,
    state,
-   horizontal_tf_in,
+   horizontal_row0_in,
    ROM0_w,
 
    Q,
@@ -26,7 +26,7 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [P_WIDTH-1:0]        horizontal_tf_in     ;
+   input [P_WIDTH-1:0]        horizontal_row0_in     ;
    input                      ROM0_w        ;
    output reg [P_WIDTH-1:0]   Q                ;
    output reg [P_WIDTH-1:0]   Q_const          ; 
@@ -80,7 +80,7 @@
          buf_data_stage2[3] <= 64'h0200000000000000; // BC=192
       end else begin
          if (ROM0_w) begin
-            buf_data_stage0[horizontal_cnt] <= horizontal_tf_in;
+            buf_data_stage0[horizontal_cnt] <= horizontal_row0_in;
          end
       end
    end

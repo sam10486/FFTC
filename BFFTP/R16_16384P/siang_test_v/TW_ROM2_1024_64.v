@@ -6,7 +6,8 @@
    CLK,
    CEN,
    state,
-   horizontal_tf_in,
+   horizontal_row0_in,
+   horizontal_row1_in,
    ROM2_w,
 
    Q,
@@ -29,7 +30,8 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [horizontal_DW-1:0]  horizontal_tf_in     ;
+   input [horizontal_DW-1:0]  horizontal_row0_in   ;
+   input [horizontal_DW-1:0]  horizontal_row1_in   ;
    input [1:0]                ROM2_w               ;
    output reg [P_WIDTH-1:0]   Q                    ;
    output reg [P_WIDTH-1:0]   Q_const              ;
@@ -44,11 +46,13 @@
    reg [3:0] stage0_group_cnt;
 
    reg [1:0] horizontal_cnt;
+   reg [1:0] horizontal_cnt_delay;
    reg [3:0] cnt_1_group;
    reg [1:0] stage1_group_th;
 
    reg [P_WIDTH-1:0] Q_Mux;
-   reg [horizontal_DW-1:0] horizontal_tf_in_delay;
+   reg [horizontal_DW-1:0] horizontal_row0_in_delay;
+   reg [horizontal_DW-1:0] horizontal_row1_in_delay;
    reg [1:0] ROM2_w_delay;
 
 
@@ -87,9 +91,9 @@
          buf_data_stage2[3] <= 128'h0000001000000000_1fffffffe0000000; // BC=192
       end else begin
          case (ROM2_w_delay)
-            2'd1: buf_data_stage0[horizontal_cnt][SEG2-1:SEG1] <= horizontal_tf_in;
-            2'd2: buf_data_stage0[horizontal_cnt][SEG1-1:0] <= horizontal_tf_in;
-            default: buf_data_stage0[horizontal_cnt] <= buf_data_stage0[horizontal_cnt];
+            2'd1: buf_data_stage0[horizontal_cnt_delay][SEG2-1:SEG1] <= horizontal_row0_in_delay;
+            2'd2: buf_data_stage0[horizontal_cnt_delay][SEG1-1:0] <= horizontal_row1_in_delay;
+            default: buf_data_stage0[horizontal_cnt_delay] <= buf_data_stage0[horizontal_cnt_delay];
          endcase
       end
    end
@@ -203,6 +207,14 @@
 
    always @(posedge CLK or posedge rst_n) begin
       if (!rst_n) begin
+         horizontal_cnt_delay <= 2'd0;
+      end else begin
+         horizontal_cnt_delay <= horizontal_cnt;
+      end
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
          ROM2_w_delay <= 2'd0;
       end else begin
          ROM2_w_delay <= ROM2_w;
@@ -255,7 +267,9 @@
    //----------output mux-------------------
    always @(*) begin
       if (ROM2_w_delay == 2'd1) begin
-         Q = {horizontal_tf_in_delay, 64'd0} ;
+         Q = {horizontal_row0_in_delay, 64'd0} ;
+      end else if (ROM2_w_delay == 2'd2) begin
+         Q = {64'd0, horizontal_row1_in_delay} ;
       end else begin
          Q = Q_Mux;
       end
@@ -263,9 +277,11 @@
 
    always @(posedge CLK or posedge rst_n) begin
       if (!rst_n) begin
-         horizontal_tf_in_delay <= 64'd0;
+         horizontal_row0_in_delay <= 64'd0;
+         horizontal_row1_in_delay <= 64'd0;
       end else begin
-         horizontal_tf_in_delay <= horizontal_tf_in;
+         horizontal_row0_in_delay <= horizontal_row0_in;
+         horizontal_row1_in_delay <= horizontal_row1_in;
       end
    end
 

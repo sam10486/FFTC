@@ -900,7 +900,8 @@
 
     //------------group tf fly---------------------------
     // ROM Q_group_tf_fly
-    wire [P_WIDTH-1:0]  horizontal_tf_out      ;
+    wire [P_WIDTH-1:0]  horizontal_mul0_tf_out      ;
+    wire [P_WIDTH-1:0]  horizontal_mul1_tf_out      ;
     wire                ROM0_w                 ; 
     wire [1:0]          ROM1_w                 ; 
     wire [1:0]          ROM2_w                 ; 
@@ -911,7 +912,8 @@
     wire [1:0]          ROM7_w                 ; 
 
     horizontal_top horizontal_top(
-        .S_out  (horizontal_tf_out  ),
+        .Mul0_S_out  (horizontal_mul0_tf_out  ),
+        .Mul1_S_out  (horizontal_mul1_tf_out  ),
         .ROM0_w (ROM0_w              ),
         .ROM1_w (ROM1_w              ),
         .ROM2_w (ROM2_w              ),
@@ -946,7 +948,7 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (horizontal_tf_out                  ),
+        .horizontal_row0_in (horizontal_mul0_tf_out             ),
         .ROM0_w             (ROM0_w                             ),
         //output
         .Q                  (siang_ROMD0_out_wire               ),
@@ -960,7 +962,7 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (horizontal_tf_out                  ),
+        .horizontal_row0_in (horizontal_mul0_tf_out             ),
         .ROM1_w             (ROM1_w                             ),
         //output
         .Q                  (siang_ROMD1_out_wire               ),
@@ -974,7 +976,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state(state),
-        .horizontal_tf_in   (horizontal_tf_out                  ),
+        .horizontal_row0_in (horizontal_mul0_tf_out             ),
+        .horizontal_row1_in (horizontal_mul1_tf_out             ),
         .ROM2_w             (ROM2_w                             ),
         //output
         .Q                  (siang_ROMD2_out_wire               ),
@@ -997,58 +1000,58 @@
 
     TW_ROM4_1024_64 u_TW_ROM4_1024_64 (
         //input
-        .stage_counter(data_cnt_wire[DC_WIDTH-1:DCNT_BP4]),
-        .rst_n(rst_n),
-        .CLK(clk),
-        .CEN(RomCen_wire),
-        .state(state),
-        .horizontal_tf_in   (                  ),
-        .ROM4_w      (                  ),
+        .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
+        .rst_n              (rst_n                              ),
+        .CLK                (clk                                ),
+        .CEN                (RomCen_wire                        ),
+        .state              (state                              ),
+        .horizontal_tf_in   (                                   ),
+        .ROM4_w             (                                   ),
         //output
-        .Q(siang_ROMD4_out_wire),
-        .Q_const(siang_ROMD4_const_out_wire)
+        .Q                  (siang_ROMD4_out_wire               ),
+        .Q_const            (siang_ROMD4_const_out_wire         )
     );
 
     TW_ROM5_1024_64 u_TW_ROM5_1024_64 (
         //input
-        .stage_counter(data_cnt_wire[DC_WIDTH-1:DCNT_BP4]),
-        .rst_n(rst_n),
-        .CLK(clk),
-        .CEN(RomCen_wire),
-        .state(state),
-        .horizontal_tf_in   (                  ),
-        .ROM5_w      (                  ),
+        .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
+        .rst_n              (rst_n                              ),
+        .CLK                (clk                                ),
+        .CEN                (RomCen_wire                        ),
+        .state              (state                              ),
+        .horizontal_tf_in   (                                   ),
+        .ROM5_w             (                                   ),
         //output
-        .Q(siang_ROMD5_out_wire),
-        .Q_const(siang_ROMD5_const_out_wire)
+        .Q                  (siang_ROMD5_out_wire               ),
+        .Q_const            (siang_ROMD5_const_out_wire         )
     );
 
     TW_ROM6_1024_64 u_TW_ROM6_1024_64 (
         //input
-        .stage_counter(data_cnt_wire[DC_WIDTH-1:DCNT_BP4]),
-        .rst_n(rst_n),
-        .CLK(clk),
-        .CEN(RomCen_wire),
-        .state(state),
-        .horizontal_tf_in   (                  ),
-        .ROM6_w      (                  ),
+        .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
+        .rst_n              (rst_n                              ),
+        .CLK                (clk                                ),
+        .CEN                (RomCen_wire                        ),
+        .state              (state                              ),
+        .horizontal_tf_in   (                                   ),
+        .ROM6_w             (                                   ),
         //output
-        .Q(siang_ROMD6_out_wire),
-        .Q_const(siang_ROMD6_const_out_wire)
+        .Q                  (siang_ROMD6_out_wire               ),
+        .Q_const            (siang_ROMD6_const_out_wire         )
     );
 
     TW_ROM7_1024_64 u_TW_ROM7_1024_64 (
         //input
-        .stage_counter(data_cnt_wire[DC_WIDTH-1:DCNT_BP4]),
-        .rst_n(rst_n),
-        .CLK(clk),
-        .CEN(RomCen_wire),
-        .state(state),
-        .horizontal_tf_in   (                  ),
-        .ROM7_w      (                  ),
+        .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
+        .rst_n              (rst_n                              ),  
+        .CLK                (clk                                ),
+        .CEN                (RomCen_wire                        ),
+        .state              (state                              ),
+        .horizontal_tf_in   (                                   ),
+        .ROM7_w             (                                   ),
         //output
-        .Q(siang_ROMD7_out_wire),
-        .Q_const(siang_ROMD7_const_out_wire)
+        .Q                  (siang_ROMD7_out_wire               ),
+        .Q_const            (siang_ROMD7_const_out_wire         )
     );
 
     stage_delay siang_stage_delay(

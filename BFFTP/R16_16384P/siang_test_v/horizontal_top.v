@@ -1,7 +1,8 @@
 `timescale 1 ns/1 ps 
 
 module horizontal_top (
-    S_out,
+    Mul0_S_out,
+    Mul1_S_out,
     ROM0_w,
     ROM1_w,
     ROM2_w,
@@ -35,9 +36,9 @@ module horizontal_top (
     parameter DC_WIDTH  = 13    ;
     parameter DCNT_BP4  = 10    ; 
     parameter ZERO = 64'd0;
-    //parameter W_1 = 64'h381d997f2d35d682 ;
 
-    output [P_WIDTH-1:0]    S_out   ;
+    output [P_WIDTH-1:0]    Mul0_S_out   ;
+    output [P_WIDTH-1:0]    Mul1_S_out   ;
     output                  ROM0_w  ;
     output [1:0]            ROM1_w  ;
     output [1:0]            ROM2_w  ;
@@ -79,7 +80,8 @@ module horizontal_top (
     wire [P_WIDTH-1:0] tf14    ;
     wire [P_WIDTH-1:0] tf15    ;
 
-    wire [P_WIDTH-1:0] group_tf_fly_wire;
+    wire [P_WIDTH-1:0] horizon_row0_based;
+    wire [P_WIDTH-1:0] horizon_row1_based;
     reg [1:0] cnt;
     reg [1:0] tf_order_cnt;
     reg CEN_delay;
@@ -90,10 +92,13 @@ module horizontal_top (
     wire [P_WIDTH-1:0] fifo_out2;
     wire [P_WIDTH-1:0] fifo_out3;
 
-    reg [P_WIDTH-1:0] A_in_mul_DifRom0;
-    reg [P_WIDTH-1:0] Mul_DifRom_tf1_out_delay1;
+    reg [P_WIDTH-1:0] A_in_mul_DifRom_row0;
+    reg [P_WIDTH-1:0] A_in_mul_DifRom_row1;
+    reg [P_WIDTH-1:0] Mul_DifRom_row0_out_delay1;
+    reg [P_WIDTH-1:0] Mul_DifRom_row1_out_delay1;
 
-    wire [P_WIDTH-1:0] Mul_DifRom_tf1_out  ;
+    wire [P_WIDTH-1:0] Mul_DifRom_row0  ;
+    wire [P_WIDTH-1:0] Mul_DifRom_row1  ;
     
     wire [P_WIDTH-1:0]   horizontal_ROM0 ;
     wire [P_WIDTH-1:0]   horizontal_ROM1 ;
@@ -108,8 +113,8 @@ module horizontal_top (
     wire [1:0]           ROM6_w          ;
     wire [1:0]           ROM7_w          ;
 
-    reg [P_WIDTH-1:0] Mul_DifRom_const ;
-    reg [P_WIDTH-1:0] Comp_DifRom_const ;
+    reg [P_WIDTH-1:0] Mul_DifRom_const_row0 ;
+    reg [P_WIDTH-1:0] Comp_DifRom_const_row0 ;
 
     always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
@@ -184,47 +189,60 @@ module horizontal_top (
     //--------------------------------
     always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
-            Mul_DifRom_tf1_out_delay1 <= 64'd0;
+            Mul_DifRom_row0_out_delay1 <= 64'd0;
+            Mul_DifRom_row1_out_delay1 <= 64'd0;
         end else begin
-            Mul_DifRom_tf1_out_delay1 <= Mul_DifRom_tf1_out;
+            Mul_DifRom_row0_out_delay1 <= Mul_DifRom_row0;
+            Mul_DifRom_row1_out_delay1 <= Mul_DifRom_row1;
         end
     end
 
     always @(*) begin
         if (tf_order_cnt > 0) begin
-            A_in_mul_DifRom0 = Mul_DifRom_tf1_out_delay1;
+            A_in_mul_DifRom_row0 = Mul_DifRom_row0_out_delay1;
+            A_in_mul_DifRom_row1 = Mul_DifRom_row1_out_delay1;
         end else begin
-            A_in_mul_DifRom0 = group_tf_fly_wire;
+            A_in_mul_DifRom_row0 = horizon_row0_based;
+            A_in_mul_DifRom_row1 = horizon_row1_based;
         end
     end
 
     always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
-            Comp_DifRom_const <= 64'd0;
+            Comp_DifRom_const_row0 <= 64'd0;
         end else begin
             if (group_cnt == 4'd0 && !CEN_delay) begin
-                Comp_DifRom_const <= A_in_mul_DifRom0;
+                Comp_DifRom_const_row0 <= A_in_mul_DifRom_row0;
             end
         end
     end
     
     always @(*) begin
         if (group_cnt == 4'd0) begin
-            Mul_DifRom_const = A_in_mul_DifRom0;
+            Mul_DifRom_const_row0 = A_in_mul_DifRom_row0;
         end else begin
-            Mul_DifRom_const = Comp_DifRom_const;
+            Mul_DifRom_const_row0 = Comp_DifRom_const_row0;
         end
     end
-    
+
     MulMod128 Mul_DifRom0(
-        .S_out(Mul_DifRom_tf1_out),        
-        .A_in(A_in_mul_DifRom0),              
-        .B_in(Mul_DifRom_const),     
+        .S_out(Mul_DifRom_row0),        
+        .A_in(A_in_mul_DifRom_row0),              
+        .B_in(Mul_DifRom_const_row0),     
         .N_in(N_in),                 
         .rst_n(rst_n),                    
         .clk(clk)                        
     );
-    
+
+    MulMod128 Mul_DifRom1(
+        .S_out(Mul_DifRom_row1),        
+        .A_in(A_in_mul_DifRom_row1),              
+        .B_in(Mul_DifRom_const_row0),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+   
     //----------------
     horizontal_Mux3 horizontal_Mux3(
         .horizontal_tf1_output  (tf1 )  ,
@@ -301,8 +319,18 @@ module horizontal_top (
         .rst_n      (rst_n)
     );
 
-    horizontal_tf_fly horizontal_tf_fly0(
-        .Q             (group_tf_fly_wire),
+    horizontal_tf_fly_row0 horizontal_tf_fly_row0(
+        .Q             (horizon_row0_based),
+        
+        .rst_n         (rst_n),  
+        .clk           (clk),  
+        .state         (state),  
+        .stage_counter (stage_counter) ,
+        .CEN           (CEN)
+    );
+
+    horizontal_tf_fly_row1 horizontal_tf_fly_row1(
+        .Q             (horizon_row1_based),
         
         .rst_n         (rst_n),  
         .clk           (clk),  
@@ -312,9 +340,18 @@ module horizontal_top (
     );
 
     MulMod128 horizon_mul0(
-        .S_out(S_out),        
+        .S_out(Mul0_S_out),        
         .A_in(fifo_out0),              
-        .B_in(A_in_mul_DifRom0),     
+        .B_in(A_in_mul_DifRom_row0),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+
+    MulMod128 horizon_mul1(
+        .S_out(Mul1_S_out),        
+        .A_in(fifo_out1),              
+        .B_in(A_in_mul_DifRom_row1),     
         .N_in(N_in),                 
         .rst_n(rst_n),                    
         .clk(clk)                        
@@ -333,7 +370,7 @@ module horizontal_top (
         .ROM6_w              (ROM6_w         ),
         .ROM7_w              (ROM7_w         ),
 
-        .horizontal_mul0_in  (S_out             ),
+        .horizontal_mul0_in  (Mul0_S_out        ),
         .horizontal_en_in    (horizontal_en     ),
         .clk                 (clk               ),
         .rst_n               (rst_n             )

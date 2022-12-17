@@ -57,7 +57,8 @@
 	`include "./siang_test_v/R16_ROMPipe_const.v"
 	`include "./siang_test_v/Mux3_const.v"
 
-	`include "./siang_test_v/horizontal_tf_fly.v"
+	`include "./siang_test_v/horizontal_tf_fly_row0.v"
+	`include "./siang_test_v/horizontal_tf_fly_row1.v"
 	`include "./siang_test_v/horizontal_top.v"
 	`include "./siang_test_v/horizontal_Mux3.v"
 	`include "./siang_test_v/horizontal_fifo.v"

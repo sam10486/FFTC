@@ -6,7 +6,7 @@
    CLK,
    CEN,
    state,
-   horizontal_tf_in,
+   horizontal_data_in,
    ROM6_w,
 
    Q,
@@ -29,8 +29,8 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [horizontal_DW-1:0]        horizontal_tf_in     ;
-   input                      ROM6_w               ;
+   input [horizontal_DW-1:0]  horizontal_data_in     ;
+   input [1:0]                ROM6_w               ;
    output reg [P_WIDTH-1:0] Q     ;
    output reg [P_WIDTH-1:0] Q_const     ;
      
@@ -43,9 +43,17 @@
    reg [1:0] cnt_2;
 
    reg [1:0] horizontal_cnt;
+   reg [1:0] horizontal_cnt_delay;
    reg [3:0] cnt_1_group;
    reg [1:0] stage1_group_th;
 
+   reg [P_WIDTH-1:0] Q_Mux;
+   reg [horizontal_DW-1:0] horizontal_row2_in_delay;
+   reg [horizontal_DW-1:0] horizontal_row3_in_delay;
+
+   reg [1:0] ROM6_w_delay;
+   reg [1:0] ROM6_w_dealy_fifo [0:12];
+   reg [horizontal_DW-1:0] horizontal_row3_in_delay_fifo [0:12];
 
    always @(posedge CLK or negedge rst_n) begin
       if (~rst_n) begin
@@ -81,10 +89,10 @@
          buf_data_stage2[2] <= 128'h000000ffffffff00_ffffbfff00004001; // BC=128
          buf_data_stage2[3] <= 128'hfffffffefffff001_ffffffdf00000021; // BC=192
       end else begin
-         case (ROM6_w)
-            2'd1: buf_data_stage0[horizontal_cnt][SEG2-1:SEG1] <= horizontal_tf_in;
-            2'd2: buf_data_stage0[horizontal_cnt][SEG1-1:0] <= horizontal_tf_in;
-            default: buf_data_stage0[horizontal_cnt] <= buf_data_stage0[horizontal_cnt];
+         case (ROM6_w_delay)
+            2'd1: buf_data_stage0[horizontal_cnt_delay][SEG2-1:SEG1] <= horizontal_row2_in_delay;
+            2'd2: buf_data_stage0[horizontal_cnt_delay][SEG1-1:0] <= horizontal_row3_in_delay;
+            default: buf_data_stage0[horizontal_cnt_delay] <= buf_data_stage0[horizontal_cnt_delay];
          endcase
       end
    end
@@ -178,7 +186,7 @@
       end
    end
 
-   // for stage 0
+   // ----------------for stage 0---------------------
    always @(posedge CLK or rst_n) begin
       if (!rst_n) begin
          horizontal_cnt <= 2'd0;
@@ -192,6 +200,22 @@
          end else begin
             horizontal_cnt <= 2'd0;
          end
+      end
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         horizontal_cnt_delay <= 2'd0;
+      end else begin
+         horizontal_cnt_delay <= horizontal_cnt;
+      end
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         ROM6_w_delay <= 2'd0;
+      end else begin
+         ROM6_w_delay <= ROM6_w;
       end
    end
    //-------------------for stage 1----------------
@@ -234,6 +258,54 @@
                3'd1: Q_const <= buf_const[1];
                default: Q_const <= Q_const;
             endcase
+         end
+      end
+   end
+
+   //----------output mux-------------------
+   always @(*) begin
+      if (ROM6_w_delay == 2'd1 && ROM6_w_dealy_fifo[12] == 2'd2) begin
+         Q = {horizontal_row2_in_delay, horizontal_row3_in_delay_fifo[12]};
+      end else if (ROM6_w_delay == 2'd1) begin
+         Q = {horizontal_row2_in_delay, 64'd0} ;
+      end else if (ROM6_w_dealy_fifo[12] == 2'd2) begin
+         Q = {64'd0, horizontal_row3_in_delay_fifo[12]} ;
+      end else begin
+         Q = Q_Mux;
+      end
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         horizontal_row2_in_delay <= 64'd0;
+         horizontal_row3_in_delay <= 64'd0;
+      end else begin
+         horizontal_row2_in_delay <= horizontal_data_in;
+         horizontal_row3_in_delay <= horizontal_data_in;
+      end
+   end
+
+
+   integer i;
+   always @(*) begin
+      ROM6_w_dealy_fifo[0] = ROM6_w_delay;
+      horizontal_row3_in_delay_fifo[0] = horizontal_row2_in_delay;
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         for (i = 0; i < 12 ; i = i + 1) begin
+            ROM6_w_dealy_fifo[i+1] <= 64'd0;
+         end
+         for (i = 0; i < 12 ; i = i + 1) begin
+            horizontal_row3_in_delay_fifo[i+1] <= 64'd0;
+         end
+      end else begin
+         for (i = 0; i < 12 ; i = i + 1) begin
+            ROM6_w_dealy_fifo[i+1] <= ROM6_w_dealy_fifo[i];
+         end
+         for (i = 0; i < 12 ; i = i + 1) begin
+            horizontal_row3_in_delay_fifo[i+1] <= horizontal_row3_in_delay_fifo[i];
          end
       end
    end

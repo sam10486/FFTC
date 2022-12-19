@@ -59,6 +59,8 @@
 
 	`include "./siang_test_v/horizontal_tf_fly_row0.v"
 	`include "./siang_test_v/horizontal_tf_fly_row1.v"
+	`include "./siang_test_v/horizontal_tf_fly_row2.v"
+	`include "./siang_test_v/horizontal_tf_fly_row3.v"
 	`include "./siang_test_v/horizontal_top.v"
 	`include "./siang_test_v/horizontal_Mux3.v"
 	`include "./siang_test_v/horizontal_fifo.v"

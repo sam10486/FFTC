@@ -4,6 +4,11 @@ module horizontal_out_process (
     horizontal_ROM0     ,
     horizontal_ROM1     ,
     horizontal_ROM2     ,
+    horizontal_ROM3     ,
+    horizontal_ROM4     ,
+    horizontal_ROM5     ,
+    horizontal_ROM6     ,
+    horizontal_ROM7     ,
     ROM0_w              ,
     ROM1_w              ,
     ROM2_w              ,
@@ -15,6 +20,8 @@ module horizontal_out_process (
 
     horizontal_mul0_in  ,
     horizontal_mul1_in  ,
+    horizontal_mul2_in  ,
+    horizontal_mul3_in  ,
     horizontal_en_in    ,
     clk                 ,
     rst_n
@@ -27,9 +34,14 @@ module horizontal_out_process (
     parameter DCNT_BP4  = 10    ; 
     parameter ZERO = 64'd0;
 
-    output [P_WIDTH-1:0] horizontal_ROM0    ;
-    output [P_WIDTH-1:0] horizontal_ROM1    ;
-    output reg [P_WIDTH-1:0] horizontal_ROM2    ;
+    output      [P_WIDTH-1:0] horizontal_ROM0    ;
+    output      [P_WIDTH-1:0] horizontal_ROM1    ;
+    output reg  [P_WIDTH-1:0] horizontal_ROM2    ;
+    output      [P_WIDTH-1:0] horizontal_ROM3    ;
+    output reg  [P_WIDTH-1:0] horizontal_ROM4    ;
+    output      [P_WIDTH-1:0] horizontal_ROM5    ;
+    output reg  [P_WIDTH-1:0] horizontal_ROM6    ;
+    output      [P_WIDTH-1:0] horizontal_ROM7    ;
     output reg           ROM0_w             ;
     output reg [1:0]     ROM1_w             ;
     output reg [1:0]     ROM2_w             ;
@@ -41,6 +53,8 @@ module horizontal_out_process (
 
     input [P_WIDTH-1:0] horizontal_mul0_in  ;
     input [P_WIDTH-1:0] horizontal_mul1_in  ;
+    input [P_WIDTH-1:0] horizontal_mul2_in  ;
+    input [P_WIDTH-1:0] horizontal_mul3_in  ;
     input               horizontal_en_in    ;
     input               clk                 ;
     input               rst_n               ;
@@ -63,7 +77,9 @@ module horizontal_out_process (
         end
     end
 
+    // ROM0
     assign horizontal_ROM0 = (cnt >= 4'd0 && cnt <= 4'd3)   ? horizontal_mul0_in : 64'd0    ;
+    // ROM1
     assign horizontal_ROM1 = (cnt >= 4'd4 && cnt <= 4'd11)  ? horizontal_mul0_in : 64'd0    ;
     // ROM2
     always @(*) begin
@@ -79,6 +95,41 @@ module horizontal_out_process (
             default: horizontal_ROM2 = 64'd0;
         endcase
     end
+    // ROM3
+    assign horizontal_ROM3 = (cnt >= 4'd4 && cnt <= 4'd11)  ? horizontal_mul1_in : 64'd0    ;
+    // ROM4
+    always @(*) begin
+        case (ROM4_w)
+            2'd1: begin
+                if (cnt >= 4'd12 && cnt <= 4'd15)   horizontal_ROM4 = horizontal_mul1_in;
+                else                                horizontal_ROM4 = 64'd0;
+            end
+            2'd2: begin
+                if (cnt >= 4'd0 && cnt <= 4'd3)     horizontal_ROM4 = horizontal_mul2_in;
+                else                                horizontal_ROM4 = 64'd0;
+            end 
+            default: horizontal_ROM4 = 64'd0;
+        endcase
+    end
+    // ROM5
+    assign horizontal_ROM5 = (cnt >= 4'd4 && cnt <= 4'd11)  ? horizontal_mul2_in : 64'd0    ;
+    // ROM6
+    always @(*) begin
+        case (ROM6_w)
+            2'd1: begin
+                if (cnt >= 4'd12 && cnt <= 4'd15)   horizontal_ROM6 = horizontal_mul2_in;
+                else                                horizontal_ROM6 = 64'd0;
+            end
+            2'd2: begin
+                if (cnt >= 4'd0 && cnt <= 4'd3)     horizontal_ROM6 = horizontal_mul3_in;
+                else                                horizontal_ROM6 = 64'd0;
+            end 
+            default: horizontal_ROM6 = 64'd0;
+        endcase
+    end
+    // ROM7
+    assign horizontal_ROM7 = (cnt >= 4'd4 && cnt <= 4'd11)  ? horizontal_mul3_in : 64'd0    ;
+
 
     always @(*) begin
         if (horizontal_en_in) begin

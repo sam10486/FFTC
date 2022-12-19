@@ -6,7 +6,7 @@
    CLK,
    CEN,
    state,
-   horizontal_tf_in,
+   horizontal_data_in,
    ROM5_w,
 
    Q,
@@ -29,8 +29,8 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [horizontal_DW-1:0]        horizontal_tf_in     ;
-   input                      ROM5_w               ;
+   input [horizontal_DW-1:0]  horizontal_data_in   ;
+   input [1:0]                ROM5_w               ;
    output reg [P_WIDTH-1:0] Q     ;
    output reg [P_WIDTH-1:0] Q_const     ;
      
@@ -82,8 +82,8 @@
          buf_data_stage2[3] <= 128'hfbffffff04000001_0008000000000000; // BC=192
       end else begin
          case (ROM5_w)
-            2'd1: buf_data_stage0[horizontal_cnt][SEG2-1:SEG1] <= horizontal_tf_in;
-            2'd2: buf_data_stage0[horizontal_cnt][SEG1-1:0] <= horizontal_tf_in;
+            2'd1: buf_data_stage0[horizontal_cnt][SEG2-1:SEG1] <= horizontal_data_in;
+            2'd2: buf_data_stage0[horizontal_cnt][SEG1-1:0] <= horizontal_data_in;
             default: buf_data_stage0[horizontal_cnt] <= buf_data_stage0[horizontal_cnt];
          endcase
       end

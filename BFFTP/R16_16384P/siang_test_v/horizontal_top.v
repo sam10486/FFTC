@@ -4,6 +4,11 @@ module horizontal_top (
     horizontal_ROM0_proc_out,
     horizontal_ROM1_proc_out,
     horizontal_ROM2_proc_out,
+    horizontal_ROM3_proc_out,
+    horizontal_ROM4_proc_out,
+    horizontal_ROM5_proc_out,
+    horizontal_ROM6_proc_out,
+    horizontal_ROM7_proc_out,
     ROM0_w,
     ROM1_w,
     ROM2_w,
@@ -41,6 +46,11 @@ module horizontal_top (
     output [P_WIDTH-1:0]    horizontal_ROM0_proc_out ;
     output [P_WIDTH-1:0]    horizontal_ROM1_proc_out ;
     output [P_WIDTH-1:0]    horizontal_ROM2_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM3_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM4_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM5_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM6_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM7_proc_out ;
     output                  ROM0_w  ;
     output [1:0]            ROM1_w  ;
     output [1:0]            ROM2_w  ;
@@ -84,6 +94,8 @@ module horizontal_top (
 
     wire [P_WIDTH-1:0] horizon_row0_based;
     wire [P_WIDTH-1:0] horizon_row1_based;
+    wire [P_WIDTH-1:0] horizon_row2_based;
+    wire [P_WIDTH-1:0] horizon_row3_based;
     reg [1:0] cnt;
     reg [1:0] tf_order_cnt;
     reg CEN_delay;
@@ -96,11 +108,17 @@ module horizontal_top (
 
     reg [P_WIDTH-1:0] A_in_mul_DifRom_row0;
     reg [P_WIDTH-1:0] A_in_mul_DifRom_row1;
+    reg [P_WIDTH-1:0] A_in_mul_DifRom_row2;
+    reg [P_WIDTH-1:0] A_in_mul_DifRom_row3;
     reg [P_WIDTH-1:0] Mul_DifRom_row0_out_delay1;
     reg [P_WIDTH-1:0] Mul_DifRom_row1_out_delay1;
+    reg [P_WIDTH-1:0] Mul_DifRom_row2_out_delay1;
+    reg [P_WIDTH-1:0] Mul_DifRom_row3_out_delay1;
 
     wire [P_WIDTH-1:0] Mul_DifRom_row0  ;
     wire [P_WIDTH-1:0] Mul_DifRom_row1  ;
+    wire [P_WIDTH-1:0] Mul_DifRom_row2  ;
+    wire [P_WIDTH-1:0] Mul_DifRom_row3  ;
     
     reg                  horizontal_en   ;
     wire                 ROM0_w          ;
@@ -114,6 +132,8 @@ module horizontal_top (
 
     wire [P_WIDTH-1:0]    Mul0_S_out   ;
     wire [P_WIDTH-1:0]    Mul1_S_out   ;
+    wire [P_WIDTH-1:0]    Mul2_S_out   ;
+    wire [P_WIDTH-1:0]    Mul3_S_out   ;
 
     reg [P_WIDTH-1:0] Mul_DifRom_const_row0 ;
     reg [P_WIDTH-1:0] Comp_DifRom_const_row0 ;
@@ -193,9 +213,13 @@ module horizontal_top (
         if (!rst_n) begin
             Mul_DifRom_row0_out_delay1 <= 64'd0;
             Mul_DifRom_row1_out_delay1 <= 64'd0;
+            Mul_DifRom_row2_out_delay1 <= 64'd0;
+            Mul_DifRom_row3_out_delay1 <= 64'd0;
         end else begin
             Mul_DifRom_row0_out_delay1 <= Mul_DifRom_row0;
             Mul_DifRom_row1_out_delay1 <= Mul_DifRom_row1;
+            Mul_DifRom_row2_out_delay1 <= Mul_DifRom_row2;
+            Mul_DifRom_row3_out_delay1 <= Mul_DifRom_row3;
         end
     end
 
@@ -203,9 +227,13 @@ module horizontal_top (
         if (tf_order_cnt > 0) begin
             A_in_mul_DifRom_row0 = Mul_DifRom_row0_out_delay1;
             A_in_mul_DifRom_row1 = Mul_DifRom_row1_out_delay1;
+            A_in_mul_DifRom_row2 = Mul_DifRom_row2_out_delay1;
+            A_in_mul_DifRom_row3 = Mul_DifRom_row3_out_delay1;
         end else begin
             A_in_mul_DifRom_row0 = horizon_row0_based;
             A_in_mul_DifRom_row1 = horizon_row1_based;
+            A_in_mul_DifRom_row2 = horizon_row2_based;
+            A_in_mul_DifRom_row3 = horizon_row3_based;
         end
     end
 
@@ -239,6 +267,24 @@ module horizontal_top (
     MulMod128 Mul_DifRom1(
         .S_out(Mul_DifRom_row1),        
         .A_in(A_in_mul_DifRom_row1),              
+        .B_in(Mul_DifRom_const_row0),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+
+    MulMod128 Mul_DifRom2(
+        .S_out(Mul_DifRom_row2),        
+        .A_in(A_in_mul_DifRom_row2),              
+        .B_in(Mul_DifRom_const_row0),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+
+    MulMod128 Mul_DifRom3(
+        .S_out(Mul_DifRom_row3),        
+        .A_in(A_in_mul_DifRom_row3),              
         .B_in(Mul_DifRom_const_row0),     
         .N_in(N_in),                 
         .rst_n(rst_n),                    
@@ -341,6 +387,26 @@ module horizontal_top (
         .CEN           (CEN)
     );
 
+    horizontal_tf_fly_row2 horizontal_tf_fly_row2(
+        .Q             (horizon_row2_based),
+        
+        .rst_n         (rst_n),  
+        .clk           (clk),  
+        .state         (state),  
+        .stage_counter (stage_counter) ,
+        .CEN           (CEN)
+    );
+
+    horizontal_tf_fly_row3 horizontal_tf_fly_row3(
+        .Q             (horizon_row3_based),
+        
+        .rst_n         (rst_n),  
+        .clk           (clk),  
+        .state         (state),  
+        .stage_counter (stage_counter) ,
+        .CEN           (CEN)
+    );
+
     MulMod128 horizon_mul0(
         .S_out(Mul0_S_out),        
         .A_in(fifo_out0),              
@@ -359,10 +425,33 @@ module horizontal_top (
         .clk(clk)                        
     );
 
+    MulMod128 horizon_mul2(
+        .S_out(Mul2_S_out),        
+        .A_in(fifo_out2),              
+        .B_in(A_in_mul_DifRom_row2),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+
+    MulMod128 horizon_mul3(
+        .S_out(Mul3_S_out),        
+        .A_in(fifo_out3),              
+        .B_in(A_in_mul_DifRom_row3),     
+        .N_in(N_in),                 
+        .rst_n(rst_n),                    
+        .clk(clk)                        
+    );
+
     horizontal_out_process horizontal_out_process(
         .horizontal_ROM0     (horizontal_ROM0_proc_out),
         .horizontal_ROM1     (horizontal_ROM1_proc_out),
         .horizontal_ROM2     (horizontal_ROM2_proc_out),
+        .horizontal_ROM3     (horizontal_ROM3_proc_out),
+        .horizontal_ROM4     (horizontal_ROM4_proc_out),
+        .horizontal_ROM5     (horizontal_ROM5_proc_out),
+        .horizontal_ROM6     (horizontal_ROM6_proc_out),
+        .horizontal_ROM7     (horizontal_ROM7_proc_out),
         .ROM0_w              (ROM0_w         ),
         .ROM1_w              (ROM1_w         ),
         .ROM2_w              (ROM2_w         ),
@@ -374,6 +463,8 @@ module horizontal_top (
 
         .horizontal_mul0_in  (Mul0_S_out        ),
         .horizontal_mul1_in  (Mul1_S_out        ),
+        .horizontal_mul2_in  (Mul2_S_out        ),
+        .horizontal_mul3_in  (Mul3_S_out        ),
         .horizontal_en_in    (horizontal_en     ),
         .clk                 (clk               ),
         .rst_n               (rst_n             )

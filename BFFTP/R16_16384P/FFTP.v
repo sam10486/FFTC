@@ -903,6 +903,11 @@
     wire [P_WIDTH-1:0]  horizontal_ROM0_proc_out;
     wire [P_WIDTH-1:0]  horizontal_ROM1_proc_out;
     wire [P_WIDTH-1:0]  horizontal_ROM2_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM3_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM4_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM5_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM6_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM7_proc_out;
     wire                ROM0_w                 ; 
     wire [1:0]          ROM1_w                 ; 
     wire [1:0]          ROM2_w                 ; 
@@ -916,6 +921,11 @@
         .horizontal_ROM0_proc_out    (horizontal_ROM0_proc_out),
         .horizontal_ROM1_proc_out    (horizontal_ROM1_proc_out),
         .horizontal_ROM2_proc_out    (horizontal_ROM2_proc_out),
+        .horizontal_ROM3_proc_out    (horizontal_ROM3_proc_out),
+        .horizontal_ROM4_proc_out    (horizontal_ROM4_proc_out),
+        .horizontal_ROM5_proc_out    (horizontal_ROM5_proc_out),
+        .horizontal_ROM6_proc_out    (horizontal_ROM6_proc_out),
+        .horizontal_ROM7_proc_out    (horizontal_ROM7_proc_out),
         .ROM0_w (ROM0_w              ),
         .ROM1_w (ROM1_w              ),
         .ROM2_w (ROM2_w              ),
@@ -992,8 +1002,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (                                   ),
-        .ROM3_w             (                                   ),
+        .horizontal_data_in (horizontal_ROM3_proc_out           ),
+        .ROM3_w             (ROM3_w                             ),
         //output
         .Q                  (siang_ROMD3_out_wire               ),
         .Q_const            (siang_ROMD3_const_out_wire         )
@@ -1006,8 +1016,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (                                   ),
-        .ROM4_w             (                                   ),
+        .horizontal_data_in (horizontal_ROM4_proc_out           ),
+        .ROM4_w             (ROM4_w                             ),
         //output
         .Q                  (siang_ROMD4_out_wire               ),
         .Q_const            (siang_ROMD4_const_out_wire         )
@@ -1020,8 +1030,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (                                   ),
-        .ROM5_w             (                                   ),
+        .horizontal_data_in (horizontal_ROM5_proc_out           ),
+        .ROM5_w             (ROM5_w                             ),
         //output
         .Q                  (siang_ROMD5_out_wire               ),
         .Q_const            (siang_ROMD5_const_out_wire         )
@@ -1034,8 +1044,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (                                   ),
-        .ROM6_w             (                                   ),
+        .horizontal_data_in (horizontal_ROM6_proc_out           ),
+        .ROM6_w             (ROM6_w                             ),
         //output
         .Q                  (siang_ROMD6_out_wire               ),
         .Q_const            (siang_ROMD6_const_out_wire         )
@@ -1048,8 +1058,8 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_tf_in   (                                   ),
-        .ROM7_w             (                                   ),
+        .horizontal_data_in (horizontal_ROM7_proc_out           ),
+        .ROM7_w             (ROM7_w                             ),
         //output
         .Q                  (siang_ROMD7_out_wire               ),
         .Q_const            (siang_ROMD7_const_out_wire         )

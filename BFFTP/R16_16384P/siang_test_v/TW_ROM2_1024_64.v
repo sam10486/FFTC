@@ -6,8 +6,7 @@
    CLK,
    CEN,
    state,
-   horizontal_row0_in,
-   horizontal_row1_in,
+   horizontal_data_in,
    ROM2_w,
 
    Q,
@@ -30,8 +29,7 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [horizontal_DW-1:0]  horizontal_row0_in   ;
-   input [horizontal_DW-1:0]  horizontal_row1_in   ;
+   input [horizontal_DW-1:0]  horizontal_data_in   ;
    input [1:0]                ROM2_w               ;
    output reg [P_WIDTH-1:0]   Q                    ;
    output reg [P_WIDTH-1:0]   Q_const              ;
@@ -55,6 +53,8 @@
    reg [horizontal_DW-1:0] horizontal_row1_in_delay;
    reg [1:0] ROM2_w_delay;
 
+   reg [1:0] ROM2_w_dealy_fifo [0:12];
+   reg [horizontal_DW-1:0] horizontal_row1_in_delay_fifo [0:12];
 
    always @(posedge CLK or negedge rst_n) begin
       if (~rst_n) begin
@@ -266,10 +266,12 @@
 
    //----------output mux-------------------
    always @(*) begin
-      if (ROM2_w_delay == 2'd1) begin
+      if (ROM2_w_delay == 2'd1 && ROM2_w_dealy_fifo[12] == 2'd2) begin
+         Q = {horizontal_row0_in_delay, horizontal_row1_in_delay_fifo[12]};
+      end else if (ROM2_w_delay == 2'd1) begin
          Q = {horizontal_row0_in_delay, 64'd0} ;
-      end else if (ROM2_w_delay == 2'd2) begin
-         Q = {64'd0, horizontal_row1_in_delay} ;
+      end else if (ROM2_w_dealy_fifo[12] == 2'd2) begin
+         Q = {64'd0, horizontal_row1_in_delay_fifo[12]} ;
       end else begin
          Q = Q_Mux;
       end
@@ -280,9 +282,33 @@
          horizontal_row0_in_delay <= 64'd0;
          horizontal_row1_in_delay <= 64'd0;
       end else begin
-         horizontal_row0_in_delay <= horizontal_row0_in;
-         horizontal_row1_in_delay <= horizontal_row1_in;
+         horizontal_row0_in_delay <= horizontal_data_in;
+         horizontal_row1_in_delay <= horizontal_data_in;
       end
    end
 
+
+   integer i;
+   always @(*) begin
+      ROM2_w_dealy_fifo[0] = ROM2_w_delay;
+      horizontal_row1_in_delay_fifo[0] = horizontal_row1_in_delay;
+   end
+
+   always @(posedge CLK or posedge rst_n) begin
+      if (!rst_n) begin
+         for (i = 0; i < 12 ; i = i + 1) begin
+            ROM2_w_dealy_fifo[i+1] <= 64'd0;
+         end
+         for (i = 0; i < 12 ; i = i + 1) begin
+            horizontal_row1_in_delay_fifo[i+1] <= 64'd0;
+         end
+      end else begin
+         for (i = 0; i < 12 ; i = i + 1) begin
+            ROM2_w_dealy_fifo[i+1] <= ROM2_w_dealy_fifo[i];
+         end
+         for (i = 0; i < 12 ; i = i + 1) begin
+            horizontal_row1_in_delay_fifo[i+1] <= horizontal_row1_in_delay_fifo[i];
+         end
+      end
+   end
    endmodule

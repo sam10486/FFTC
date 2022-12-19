@@ -14,6 +14,7 @@ module horizontal_out_process (
     ROM7_w              ,
 
     horizontal_mul0_in  ,
+    horizontal_mul1_in  ,
     horizontal_en_in    ,
     clk                 ,
     rst_n
@@ -28,7 +29,7 @@ module horizontal_out_process (
 
     output [P_WIDTH-1:0] horizontal_ROM0    ;
     output [P_WIDTH-1:0] horizontal_ROM1    ;
-    output [P_WIDTH-1:0] horizontal_ROM2    ;
+    output reg [P_WIDTH-1:0] horizontal_ROM2    ;
     output reg           ROM0_w             ;
     output reg [1:0]     ROM1_w             ;
     output reg [1:0]     ROM2_w             ;
@@ -39,11 +40,12 @@ module horizontal_out_process (
     output reg [1:0]     ROM7_w             ;
 
     input [P_WIDTH-1:0] horizontal_mul0_in  ;
+    input [P_WIDTH-1:0] horizontal_mul1_in  ;
     input               horizontal_en_in    ;
     input               clk                 ;
     input               rst_n               ;
 
-    reg [3:0]           cnt                 ;  
+    reg [3:0]           cnt                             ;
     
     always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
@@ -63,7 +65,20 @@ module horizontal_out_process (
 
     assign horizontal_ROM0 = (cnt >= 4'd0 && cnt <= 4'd3)   ? horizontal_mul0_in : 64'd0    ;
     assign horizontal_ROM1 = (cnt >= 4'd4 && cnt <= 4'd11)  ? horizontal_mul0_in : 64'd0    ;
-    assign horizontal_ROM2 = (cnt >= 4'd12 && cnt <= 4'd15) ? horizontal_mul0_in : 64'd0    ;
+    // ROM2
+    always @(*) begin
+        case (ROM2_w)
+            2'd1: begin
+                if (cnt >= 4'd12 && cnt <= 4'd15)   horizontal_ROM2 = horizontal_mul0_in;
+                else                                horizontal_ROM2 = 64'd0;
+            end
+            2'd2: begin
+                if (cnt >= 4'd0 && cnt <= 4'd3)     horizontal_ROM2 = horizontal_mul1_in;
+                else                                horizontal_ROM2 = 64'd0;
+            end 
+            default: horizontal_ROM2 = 64'd0;
+        endcase
+    end
 
     always @(*) begin
         if (horizontal_en_in) begin

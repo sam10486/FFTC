@@ -25,7 +25,6 @@ module horizontal_Mux3 (
     horizontal_ROM5_in,
     horizontal_ROM6_in,
     horizontal_ROM7_in
-    
 );
 
     parameter P_WIDTH   = 64 ;                                                                 

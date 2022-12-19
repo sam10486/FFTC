@@ -1,8 +1,9 @@
 `timescale 1 ns/1 ps 
 
 module horizontal_top (
-    Mul0_S_out,
-    Mul1_S_out,
+    horizontal_ROM0_proc_out,
+    horizontal_ROM1_proc_out,
+    horizontal_ROM2_proc_out,
     ROM0_w,
     ROM1_w,
     ROM2_w,
@@ -37,8 +38,9 @@ module horizontal_top (
     parameter DCNT_BP4  = 10    ; 
     parameter ZERO = 64'd0;
 
-    output [P_WIDTH-1:0]    Mul0_S_out   ;
-    output [P_WIDTH-1:0]    Mul1_S_out   ;
+    output [P_WIDTH-1:0]    horizontal_ROM0_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM1_proc_out ;
+    output [P_WIDTH-1:0]    horizontal_ROM2_proc_out ;
     output                  ROM0_w  ;
     output [1:0]            ROM1_w  ;
     output [1:0]            ROM2_w  ;
@@ -100,9 +102,6 @@ module horizontal_top (
     wire [P_WIDTH-1:0] Mul_DifRom_row0  ;
     wire [P_WIDTH-1:0] Mul_DifRom_row1  ;
     
-    wire [P_WIDTH-1:0]   horizontal_ROM0 ;
-    wire [P_WIDTH-1:0]   horizontal_ROM1 ;
-    wire [P_WIDTH-1:0]   horizontal_ROM2 ;
     reg                  horizontal_en   ;
     wire                 ROM0_w          ;
     wire [1:0]           ROM1_w          ;
@@ -112,6 +111,9 @@ module horizontal_top (
     wire [1:0]           ROM5_w          ;
     wire [1:0]           ROM6_w          ;
     wire [1:0]           ROM7_w          ;
+
+    wire [P_WIDTH-1:0]    Mul0_S_out   ;
+    wire [P_WIDTH-1:0]    Mul1_S_out   ;
 
     reg [P_WIDTH-1:0] Mul_DifRom_const_row0 ;
     reg [P_WIDTH-1:0] Comp_DifRom_const_row0 ;
@@ -358,9 +360,9 @@ module horizontal_top (
     );
 
     horizontal_out_process horizontal_out_process(
-        .horizontal_ROM0     (horizontal_ROM0),
-        .horizontal_ROM1     (horizontal_ROM1),
-        .horizontal_ROM2     (horizontal_ROM2),
+        .horizontal_ROM0     (horizontal_ROM0_proc_out),
+        .horizontal_ROM1     (horizontal_ROM1_proc_out),
+        .horizontal_ROM2     (horizontal_ROM2_proc_out),
         .ROM0_w              (ROM0_w         ),
         .ROM1_w              (ROM1_w         ),
         .ROM2_w              (ROM2_w         ),
@@ -371,6 +373,7 @@ module horizontal_top (
         .ROM7_w              (ROM7_w         ),
 
         .horizontal_mul0_in  (Mul0_S_out        ),
+        .horizontal_mul1_in  (Mul1_S_out        ),
         .horizontal_en_in    (horizontal_en     ),
         .clk                 (clk               ),
         .rst_n               (rst_n             )

@@ -900,8 +900,9 @@
 
     //------------group tf fly---------------------------
     // ROM Q_group_tf_fly
-    wire [P_WIDTH-1:0]  horizontal_mul0_tf_out      ;
-    wire [P_WIDTH-1:0]  horizontal_mul1_tf_out      ;
+    wire [P_WIDTH-1:0]  horizontal_ROM0_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM1_proc_out;
+    wire [P_WIDTH-1:0]  horizontal_ROM2_proc_out;
     wire                ROM0_w                 ; 
     wire [1:0]          ROM1_w                 ; 
     wire [1:0]          ROM2_w                 ; 
@@ -912,8 +913,9 @@
     wire [1:0]          ROM7_w                 ; 
 
     horizontal_top horizontal_top(
-        .Mul0_S_out  (horizontal_mul0_tf_out  ),
-        .Mul1_S_out  (horizontal_mul1_tf_out  ),
+        .horizontal_ROM0_proc_out    (horizontal_ROM0_proc_out),
+        .horizontal_ROM1_proc_out    (horizontal_ROM1_proc_out),
+        .horizontal_ROM2_proc_out    (horizontal_ROM2_proc_out),
         .ROM0_w (ROM0_w              ),
         .ROM1_w (ROM1_w              ),
         .ROM2_w (ROM2_w              ),
@@ -948,7 +950,7 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_row0_in (horizontal_mul0_tf_out             ),
+        .horizontal_data_in (horizontal_ROM0_proc_out             ),
         .ROM0_w             (ROM0_w                             ),
         //output
         .Q                  (siang_ROMD0_out_wire               ),
@@ -962,7 +964,7 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state              (state                              ),
-        .horizontal_row0_in (horizontal_mul0_tf_out             ),
+        .horizontal_data_in (horizontal_ROM1_proc_out             ),
         .ROM1_w             (ROM1_w                             ),
         //output
         .Q                  (siang_ROMD1_out_wire               ),
@@ -976,8 +978,7 @@
         .CLK                (clk                                ),
         .CEN                (RomCen_wire                        ),
         .state(state),
-        .horizontal_row0_in (horizontal_mul0_tf_out             ),
-        .horizontal_row1_in (horizontal_mul1_tf_out             ),
+        .horizontal_data_in (horizontal_ROM2_proc_out           ),
         .ROM2_w             (ROM2_w                             ),
         //output
         .Q                  (siang_ROMD2_out_wire               ),

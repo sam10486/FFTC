@@ -26,10 +26,8 @@ module horizontal_fifo (
     reg [P_WIDTH-1:0] fifo_array_4 [0:4]; 
     reg [P_WIDTH-1:0] fifo_array_8 [0:8]; 
     reg [P_WIDTH-1:0] fifo_array_12 [0:12]; 
-    reg [P_WIDTH-1:0] fifo_array_12_ROM2_w [0:12];
 
     always @(*) begin
-        fifo_array_12_ROM2_w[0] = data_in_delay0;
         fifo_array_12[0] = data_in_delay12;
         fifo_array_8[0] = data_in_delay8;
         fifo_array_4[0] = data_in_delay4;
@@ -38,9 +36,6 @@ module horizontal_fifo (
     integer i ;
     always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
-            for (i = 0; i < 12; i = i + 1 ) begin
-                fifo_array_12_ROM2_w[i+1] <= 64'd0;
-            end
             for (i = 0; i < 12 ; i = i + 1) begin
                 fifo_array_12[i+1] <= 64'd0;
             end
@@ -51,9 +46,6 @@ module horizontal_fifo (
                 fifo_array_4[i+1] <= 64'd0;
             end
         end else begin
-            for (i = 0; i < 12; i = i + 1 ) begin
-                fifo_array_12_ROM2_w[i+1] <= fifo_array_12_ROM2_w[i];
-            end
             for (i = 0; i < 12 ; i = i + 1) begin
                 fifo_array_12[i+1] <= fifo_array_12[i];
             end

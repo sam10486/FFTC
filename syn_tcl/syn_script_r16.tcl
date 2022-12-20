@@ -28,19 +28,31 @@ ort_nets -all -buffer_constant} {Change Naming Rule} {change_names -rule verilog
 
 set hdlin_while_loop_iterations 2000
 
+
+analyze -format verilog ../vlog/siang_test_v/horizontal_tf_fly_row0.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_tf_fly_row1.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_tf_fly_row2.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_tf_fly_row3.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_top.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_Mux3.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_fifo.v  
+analyze -format verilog ../vlog/siang_test_v/DifRom_tf_const.v  
+analyze -format verilog ../vlog/siang_test_v/horizontal_out_process.v  
+
+
 analyze -format verilog ../vlog/siang_test_v/MulMod128_on_the_fly.v       
 analyze -format verilog ../vlog/siang_test_v/Mux3_const.v                 
 analyze -format verilog ../vlog/siang_test_v/on_the_fly_pip.v             
 analyze -format verilog ../vlog/siang_test_v/R16_ROMPipe_const.v           
 analyze -format verilog ../vlog/siang_test_v/stage_delay.v                
 analyze -format verilog ../vlog/siang_test_v/TW_ROM0_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM1_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM2_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM3_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM4_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM5_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM6_1024_64.v            
-analyze -format verilog ../vlog/siang_test_v/TW_ROM7_1024_64.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM1_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM2_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM3_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM4_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM5_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM6_1024_128.v            
+analyze -format verilog ../vlog/siang_test_v/TW_ROM7_1024_128.v            
 analyze -format verilog ../vlog/FFTP.v              
 analyze -format verilog ../vlog/CenCtrl.v           
 analyze -format verilog ../vlog/CLA4.v              

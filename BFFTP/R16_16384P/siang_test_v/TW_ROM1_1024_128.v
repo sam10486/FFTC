@@ -1,13 +1,13 @@
  `timescale 1 ns/1 ps     
 
- module TW_ROM3_1024_64(
+ module TW_ROM1_1024_128(
    stage_counter,
    rst_n,
    CLK,
    CEN,
    state,
    horizontal_data_in,
-   ROM3_w,
+   ROM1_w,
 
    Q,
    Q_const
@@ -19,7 +19,7 @@
    parameter                  init_store_data = 4;
    parameter                  group_stage0 = 64;
    parameter                  group_stage1 = 4;
-   parameter S_WIDTH   = 4 ; 
+   parameter                  S_WIDTH   = 4 ; 
    parameter                  SEG1  = 64 ;                                                                     
    parameter                  SEG2  = 128 ; 
    parameter                  horizontal_DW = 64;
@@ -29,10 +29,10 @@
    input                      CLK                  ;
    input                      CEN                  ;
    input [S_WIDTH-1:0]        state                ;
-   input [horizontal_DW-1:0]        horizontal_data_in     ;
-   input [1:0]                      ROM3_w               ;
-   output reg [P_WIDTH-1:0] Q     ;
-   output reg [P_WIDTH-1:0] Q_const     ;
+   input [horizontal_DW-1:0]  horizontal_data_in     ;
+   input [1:0]                ROM1_w               ;
+   output reg [P_WIDTH-1:0]   Q                    ;
+   output reg [P_WIDTH-1:0]   Q_const              ;
      
    reg [P_WIDTH-1:0] buf_data_stage0 [0:init_store_data-1];  
    reg [P_WIDTH-1:0] buf_data_stage1 [0:group_stage1-1][0:init_store_data-1];  
@@ -52,37 +52,36 @@
          //stage 0
          //group 0
          buf_data_stage0[0] <= 128'h0000000000000001_0000000000000001    ; // BC=0
-         buf_data_stage0[1] <= 128'hffeffffefffffff1_81efc17180eb1719    ; // BC=64
-         buf_data_stage0[2] <= 128'h0200000000000000_0400000000000400    ; // BC=128
-         buf_data_stage0[3] <= 128'hdfffffff00002001_e9097466e450f697    ; // BC=192
-
+         buf_data_stage0[1] <= 128'hfffdffff00000003_5b11501d07d1bfa5    ; // BC=64
+         buf_data_stage0[2] <= 128'hfff7ffff00000001_ffeffffefffffff1    ; // BC=128
+         buf_data_stage0[3] <= 128'hffeffffefffffff1_52ca810d84ba33e7    ; // BC=192
    
          //stage 1
          buf_data_stage1[0][0] <= 128'h0000000000000001_0000000000000001; // BC=0
-         buf_data_stage1[0][1] <= 128'hffeffffefffffff1_81efc17180eb1719; // BC=64
-         buf_data_stage1[0][2] <= 128'h0200000000000000_0400000000000400; // BC=128
-         buf_data_stage1[0][3] <= 128'hdfffffff00002001_e9097466e450f697; // BC=192
+         buf_data_stage1[0][1] <= 128'hfffdffff00000003_5b11501d07d1bfa5; // BC=64
+         buf_data_stage1[0][2] <= 128'hfff7ffff00000001_ffeffffefffffff1; // BC=128
+         buf_data_stage1[0][3] <= 128'hffeffffefffffff1_52ca810d84ba33e7; // BC=192
 
-         buf_data_stage1[1][0] <= 128'h58c3de196dbcf497_adda166b62c2ba2c; // BC=16
-         buf_data_stage1[1][1] <= 128'h48bb429405cd1ea3_c465162d27278a78;
-         buf_data_stage1[1][2] <= 128'h60db79e8cc72fe5b_c5e4bb2a5aa63a07;
-         buf_data_stage1[1][3] <= 128'h6e0b9a3cd762ef3e_28f555d7e67baa6c;
-         buf_data_stage1[2][0] <= 128'hd3946b6a55f9087f_9d24a3f365407288; // BC=32
-         buf_data_stage1[2][1] <= 128'h8823e9bc572210f5_954aa1c27e804547;
-         buf_data_stage1[2][2] <= 128'hd2abf21029ace519_8024d1d331c08932;
-         buf_data_stage1[2][3] <= 128'h62ae44218641740b_50810d63f4c5ee0f;
-         buf_data_stage1[3][0] <= 128'h5b11501d07d1bfa5_0c26e0b997ad762f; // BC=48
-         buf_data_stage1[3][1] <= 128'h52ca810d84ba33e7_8823e9bc572210f5;
-         buf_data_stage1[3][2] <= 128'h840fa37ec53a39e1_3de19c67cf496a74;
-         buf_data_stage1[3][3] <= 128'he9097466e450f697_55037bc094c6b9f5;
+         buf_data_stage1[1][0] <= 128'hae7d2abe72929acf_dcee6ba66b6361d7; // BC=16
+         buf_data_stage1[1][1] <= 128'hd1df70583aa377bd_ba856751f25d9591;
+         buf_data_stage1[1][2] <= 128'hd3946b6a55f9087f_59428f55043e67bb;
+         buf_data_stage1[1][3] <= 128'hbf562ae382c86418_897a64fb4f51752c;
+         buf_data_stage1[2][0] <= 128'h58c3de196dbcf497_7b83abdf412342cf; // BC=32
+         buf_data_stage1[2][1] <= 128'h0c26e0b997ad762f_9d24a3f365407288;
+         buf_data_stage1[2][2] <= 128'h6a7c9217f0ce3407_5ce12fcfabc79d87;
+         buf_data_stage1[2][3] <= 128'h48bb429405cd1ea3_c5ff6cb7eb38fddc;
+         buf_data_stage1[3][0] <= 128'h9ab4d5fb2ded1731_58c3de196dbcf497; // BC=48
+         buf_data_stage1[3][1] <= 128'h5b11501d07d1bfa5_d3946b6a55f9087f;
+         buf_data_stage1[3][2] <= 128'h969e9096afde4510_48bb429405cd1ea3;
+         buf_data_stage1[3][3] <= 128'h81efc17180eb1719_8823e9bc572210f5;
 
          //stage 2
          buf_data_stage2[0] <= 128'h0000000000000001_0000000000000001; // BC=0
-         buf_data_stage2[1] <= 128'hfffffffefffc0001_0000001fffffffe0; // BC=64
-         buf_data_stage2[2] <= 128'h0000001000000000_fffffbff00000001; // BC=128
-         buf_data_stage2[3] <= 128'hffbfffff00000001_0000000000008000; // BC=192
+         buf_data_stage2[1] <= 128'hfffffffeffffffc1_0200000000000000; // BC=64
+         buf_data_stage2[2] <= 128'h0000000000001000_fffffffefffc0001; // BC=128
+         buf_data_stage2[3] <= 128'hfffffffefffc0001_fffff7ff00000801; // BC=192
       end else begin
-         case (ROM3_w)
+         case (ROM1_w)
             2'd1: buf_data_stage0[horizontal_cnt][SEG2-1:SEG1] <= horizontal_data_in;
             2'd2: buf_data_stage0[horizontal_cnt][SEG1-1:0] <= horizontal_data_in;
             default: buf_data_stage0[horizontal_cnt] <= buf_data_stage0[horizontal_cnt];
@@ -103,7 +102,7 @@
                      2'd1: Q <= buf_data_stage0[1];
                      2'd2: Q <= buf_data_stage0[2];
                      2'd3: Q <= buf_data_stage0[3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end
                3'd1: begin
@@ -112,7 +111,7 @@
                      2'd1: Q <= buf_data_stage1[stage1_group_th][1];
                      2'd2: Q <= buf_data_stage1[stage1_group_th][2];
                      2'd3: Q <= buf_data_stage1[stage1_group_th][3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end
                3'd2: begin
@@ -121,7 +120,7 @@
                      2'd1: Q <= buf_data_stage2[1];
                      2'd2: Q <= buf_data_stage2[2];
                      2'd3: Q <= buf_data_stage2[3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end 
                default: Q <= 128'h1_0000000000000001;
@@ -180,11 +179,11 @@
    end
 
    // for stage 0
-   always @(posedge CLK or rst_n) begin
+   always @(posedge CLK or negedge rst_n) begin
       if (!rst_n) begin
          horizontal_cnt <= 2'd0;
       end else begin
-         if (ROM3_w == 2'd1 || ROM3_w == 2'd2) begin
+         if (ROM1_w == 2'd1 || ROM1_w == 2'd2) begin
             if (horizontal_cnt == 2'd3) begin
                horizontal_cnt <= 2'd0;
             end else begin
@@ -195,6 +194,7 @@
          end
       end
    end
+
    //-------------------for stage 1----------------
    always @(posedge CLK or negedge rst_n) begin
       if (~rst_n) begin
@@ -226,8 +226,8 @@
    
    always @(posedge CLK or negedge rst_n) begin
       if (~rst_n) begin
-         buf_const[0] <= 128'hfffffffefffc0001_0000001fffffffe0;
-         buf_const[1] <= 128'hfffffffefffc0001_0000001fffffffe0;
+         buf_const[0] <= 128'hfffffffeffffffc1_0200000000000000;
+         buf_const[1] <= 128'hfffffffeffffffc1_0200000000000000;
       end else begin
          if (~CEN) begin
             case (stage_counter)
@@ -238,5 +238,6 @@
          end
       end
    end
+
 
    endmodule

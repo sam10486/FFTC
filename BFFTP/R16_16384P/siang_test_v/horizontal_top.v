@@ -138,7 +138,7 @@ module horizontal_top (
     reg [P_WIDTH-1:0] Mul_DifRom_const_row0 ;
     reg [P_WIDTH-1:0] Comp_DifRom_const_row0 ;
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             CEN_delay <= 1'd1;
         end else begin
@@ -146,7 +146,7 @@ module horizontal_top (
         end
     end
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             cnt <= 2'd0;
         end else begin
@@ -162,7 +162,7 @@ module horizontal_top (
         end
     end
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             horizontal_en <= 1'd0;
         end else begin
@@ -176,7 +176,7 @@ module horizontal_top (
         end
     end
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             tf_order_cnt <= 2'd0;
         end else begin
@@ -192,7 +192,7 @@ module horizontal_top (
         end
     end
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             group_cnt <= 4'd0;
         end else begin
@@ -209,7 +209,7 @@ module horizontal_top (
     end
 
     //--------------------------------
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             Mul_DifRom_row0_out_delay1 <= 64'd0;
             Mul_DifRom_row1_out_delay1 <= 64'd0;
@@ -237,7 +237,7 @@ module horizontal_top (
         end
     end
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             Comp_DifRom_const_row0 <= 64'd0;
         end else begin

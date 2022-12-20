@@ -1,6 +1,6 @@
  `timescale 1 ns/1 ps     
 
- module TW_ROM5_1024_64(
+ module TW_ROM5_1024_128(
    stage_counter,
    rst_n,
    CLK,
@@ -102,7 +102,7 @@
                      2'd1: Q <= buf_data_stage0[1];
                      2'd2: Q <= buf_data_stage0[2];
                      2'd3: Q <= buf_data_stage0[3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end
                3'd1: begin
@@ -111,7 +111,7 @@
                      2'd1: Q <= buf_data_stage1[stage1_group_th][1];
                      2'd2: Q <= buf_data_stage1[stage1_group_th][2];
                      2'd3: Q <= buf_data_stage1[stage1_group_th][3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end
                3'd2: begin
@@ -120,7 +120,7 @@
                      2'd1: Q <= buf_data_stage2[1];
                      2'd2: Q <= buf_data_stage2[2];
                      2'd3: Q <= buf_data_stage2[3];
-                     default: Q <= 128'd0;
+                     //default: Q <= 128'd0;
                   endcase
                end 
                default: Q <= 128'h1_0000000000000001;
@@ -179,7 +179,7 @@
    end
 
    // for stage 0
-   always @(posedge CLK or rst_n) begin
+   always @(posedge CLK or negedge rst_n) begin
       if (!rst_n) begin
          horizontal_cnt <= 2'd0;
       end else begin

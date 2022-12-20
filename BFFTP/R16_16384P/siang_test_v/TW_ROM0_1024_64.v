@@ -98,7 +98,7 @@
                      2'd1: Q <= buf_data_stage0[1];
                      2'd2: Q <= buf_data_stage0[2];
                      2'd3: Q <= buf_data_stage0[3];
-                     default: Q <= 64'd0;
+                     //default: Q <= 64'd0;
                   endcase
                end
                3'd1: begin
@@ -107,7 +107,7 @@
                      2'd1: Q <= buf_data_stage1[stage1_group_th][1];
                      2'd2: Q <= buf_data_stage1[stage1_group_th][2];
                      2'd3: Q <= buf_data_stage1[stage1_group_th][3];
-                     default: Q <= 64'd0;
+                     //default: Q <= 64'd0;
                   endcase
                end
                3'd2: begin
@@ -116,7 +116,7 @@
                      2'd1: Q <= buf_data_stage2[1];
                      2'd2: Q <= buf_data_stage2[2];
                      2'd3: Q <= buf_data_stage2[3];
-                     default: Q <= 64'd0;
+                     //default: Q <= 64'd0;
                   endcase
                end 
                default: Q <= 64'd1;
@@ -175,7 +175,7 @@
    end
 
    //-------------------for stage 0------------------
-   always @(posedge CLK or rst_n) begin
+   always @(posedge CLK or negedge rst_n) begin
       if (!rst_n) begin
          horizontal_cnt <= 2'd0;
       end else begin

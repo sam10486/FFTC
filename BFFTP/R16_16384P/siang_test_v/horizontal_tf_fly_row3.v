@@ -26,7 +26,7 @@ reg [3:0] cnt;
 reg [5:0] horizontal_factor_idx;
 
 
-always @(posedge clk or posedge rst_n) begin
+always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         horizontal_factor[0] <= 64'h0000000000000001 ; // don't work
         horizontal_factor[1] <= 64'h75c91fcd00f90ea6 ;
@@ -96,7 +96,7 @@ always @(posedge clk or posedge rst_n) begin
 end
 
 
-always @(posedge clk or posedge rst_n) begin
+always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         cnt <= 4'd0;
     end else begin
@@ -112,7 +112,7 @@ always @(posedge clk or posedge rst_n) begin
     end
 end
 
-always @(posedge clk or posedge rst_n) begin
+always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         horizontal_factor_idx <= 6'd1;
     end else begin
@@ -124,7 +124,7 @@ always @(posedge clk or posedge rst_n) begin
     end
 end
 
-always @(posedge clk or posedge rst_n) begin
+always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         Q <= 64'd0;
     end else begin

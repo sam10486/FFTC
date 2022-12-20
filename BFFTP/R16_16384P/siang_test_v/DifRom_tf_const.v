@@ -28,7 +28,7 @@ module DifRom_tf_const (
 
     reg [P_WIDTH-1:0] DifRom_tf_const [0:3];
 
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             DifRom_tf_const[0] <= 64'h381d997f2d35d682 ;
             DifRom_tf_const[1] <= 64'h252502e45f699196 ;

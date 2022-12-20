@@ -967,7 +967,7 @@
         .Q_const            (siang_ROMD0_const_out_wire         )
     );
 
-    TW_ROM1_1024_64 u_TW_ROM1_1024_64 (
+    TW_ROM1_1024_128 u_TW_ROM1_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -981,7 +981,7 @@
         .Q_const            (siang_ROMD1_const_out_wire         )
     );
 
-    TW_ROM2_1024_64 u_TW_ROM2_1024_64 (
+    TW_ROM2_1024_128 u_TW_ROM2_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -995,7 +995,7 @@
         .Q_const            (siang_ROMD2_const_out_wire         )
     );
 
-    TW_ROM3_1024_64 u_TW_ROM3_1024_64 (
+    TW_ROM3_1024_128 u_TW_ROM3_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -1009,7 +1009,7 @@
         .Q_const            (siang_ROMD3_const_out_wire         )
     );
 
-    TW_ROM4_1024_64 u_TW_ROM4_1024_64 (
+    TW_ROM4_1024_128 u_TW_ROM4_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -1023,7 +1023,7 @@
         .Q_const            (siang_ROMD4_const_out_wire         )
     );
 
-    TW_ROM5_1024_64 u_TW_ROM5_1024_64 (
+    TW_ROM5_1024_128 u_TW_ROM5_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -1037,7 +1037,7 @@
         .Q_const            (siang_ROMD5_const_out_wire         )
     );
 
-    TW_ROM6_1024_64 u_TW_ROM6_1024_64 (
+    TW_ROM6_1024_128 u_TW_ROM6_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),
@@ -1051,7 +1051,7 @@
         .Q_const            (siang_ROMD6_const_out_wire         )
     );
 
-    TW_ROM7_1024_64 u_TW_ROM7_1024_64 (
+    TW_ROM7_1024_128 u_TW_ROM7_1024_128 (
         //input
         .stage_counter      (data_cnt_wire[DC_WIDTH-1:DCNT_BP4] ),
         .rst_n              (rst_n                              ),  

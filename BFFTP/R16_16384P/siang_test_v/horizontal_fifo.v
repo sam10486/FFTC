@@ -34,7 +34,7 @@ module horizontal_fifo (
     end
 
     integer i ;
-    always @(posedge clk or posedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (i = 0; i < 12 ; i = i + 1) begin
                 fifo_array_12[i+1] <= 64'd0;
@@ -64,7 +64,7 @@ module horizontal_fifo (
             2'd1: fifo_out = fifo_array_4[4];
             2'd2: fifo_out = fifo_array_8[8];
             2'd3: fifo_out = fifo_array_12[12];
-            default: fifo_out = 64'd0;
+            //default: fifo_out = 64'd0;
         endcase
     end
 endmodule

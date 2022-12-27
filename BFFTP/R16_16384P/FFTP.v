@@ -1075,17 +1075,7 @@
 
     
     //                                                                        
- 	MulMod128_on_the_fly siang_u0_on_the_fly(
-                                .S_out(siang_MulB0_wire_fly),                          
-                                .const_in(siang_MulB0_const_wire),    //const                          
- 		                        .B_in(siang_MulB0_wire),                                 
- 		                        .N_in(N_D4_wire),                                  
- 						        .rst_n(rst_n),                                     
-                                .clk(clk),    
-                                .Mul_sel(Mul_sel_D_wire),    
-                                .stage_counter(stage_delay_out),
-                                .state(state)                  
-    ) ; 
+    assign siang_MulB0_wire_fly = siang_MulB0_wire;
     //                                                                        
  	MulMod128_on_the_fly siang_u1_on_the_fly(
                                 .S_out(siang_MulB1_wire_fly),                          
@@ -1406,14 +1396,13 @@
  			    ) ;
     
     
-    //                                                                        
- 	MulMod128 u0_MulMod128(.S_out(MulMod0_out_wire),                          
-                         .A_in(RA0D_out_wire),                              
- 		                   .B_in(siang_MulB0_wire_fly),                                 
- 		                   .N_in(N_D4_wire),                                  
- 						   .rst_n(rst_n),                                     
-                         .clk(clk)                                          
-                         ) ;                                                
+    //   
+    delay_buffer delay_u0_MulMod(
+        .data_out       (MulMod0_out_wire),
+        .clk            (clk),
+        .rst_n          (rst_n),
+        .data_in        (RA0D_out_wire)
+    );                                                                  
  	//                                                                        
  	MulMod128 u1_MulMod128(.S_out(MulMod1_out_wire),                          
                          .A_in(MulA1_wire),                                 

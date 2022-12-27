@@ -65,6 +65,7 @@
 	`include "./siang_test_v/horizontal_Mux3.v"
 	`include "./siang_test_v/horizontal_fifo.v"
 	`include "./siang_test_v/horizontal_out_process.v"
+	`include "./siang_test_v/delay_buffer.v"
   //-------------------------------------
                                                                                                                               
  `timescale 1 ns/1 ps                                                                                                         

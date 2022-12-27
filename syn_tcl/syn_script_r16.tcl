@@ -37,6 +37,7 @@ analyze -format verilog ../vlog/siang_test_v/horizontal_top.v
 analyze -format verilog ../vlog/siang_test_v/horizontal_Mux3.v  
 analyze -format verilog ../vlog/siang_test_v/horizontal_fifo.v  
 analyze -format verilog ../vlog/siang_test_v/horizontal_out_process.v  
+analyze -format verilog ../vlog/siang_test_v/delay_buffer.v  
 
 
 analyze -format verilog ../vlog/siang_test_v/MulMod128_on_the_fly.v       
